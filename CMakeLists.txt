@@ -1,0 +1,14 @@
+cmake_minimum_required(VERSION 3.26)
+
+set(PROJECTNAME "VoidLook")
+
+project(${PROJECTNAME} VERSION 1.0.0 LANGUAGES C)
+
+set(CMAKE_C_STANDARD 23)
+set(CMAKE_C_STANDARD_REQUIRED ON)
+set(CMAKE_C_EXTENSIONS ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+find_package(CURL REQUIRED)
+
+add_subdirectory(source)
