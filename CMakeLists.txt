@@ -11,4 +11,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 find_package(CURL REQUIRED)
 
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/.env" DESTINATION "${CMAKE_BINARY_DIR}/source")
+
 add_subdirectory(source)

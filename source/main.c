@@ -3,6 +3,8 @@
 #include <string.h>
 #include <curl/curl.h>
 
+#include "include/apikey.h"
+
 typedef struct DownloadMemory {
     char *data;
     size_t size;
@@ -27,10 +29,32 @@ int main(void)
         goto cleanup;
     }
 
-    curl_easy_setopt(curl_handle, CURLOPT_URL, "https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY");
+    char *api_key = apikey_get("NASA_API_KEY"); 
+    if(api_key == nullptr){
+        error_code = 1;
+        goto cleanup;
+    }
+
+    const char *nasa_address = "https://api.nasa.gov/planetary/apod?api_key=";
+    int address_size = strlen(nasa_address) + strlen(api_key) + 1;
+    char *nasa_address_with_key = calloc(1, address_size);
+    if(nasa_address_with_key == nullptr) {
+        fprintf(stderr, "Can't allocate memory for NASA API KEY!");
+        error_code = 1;
+        goto cleanup;
+    }
+    strcat(nasa_address_with_key, nasa_address);
+    strcat(nasa_address_with_key, api_key);
+
+    curl_easy_setopt(curl_handle, CURLOPT_URL, nasa_address_with_key);
     curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, write_memory_callback);
     curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void*)&chunk);
     curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, "libcurl-agent/1.0");
+
+    free(nasa_address_with_key);
+    free(api_key);
+    nasa_address_with_key = nullptr;
+    api_key = nullptr;
 
     printf("Connecting with NASA servers...\n");
 
@@ -41,10 +65,9 @@ int main(void)
         printf("%s\n", chunk.data);
     }
 
-    curl_easy_cleanup(curl_handle);
-
 cleanup:
     free(chunk.data);
+    curl_easy_cleanup(curl_handle);
     curl_global_cleanup();
 
     return error_code;
