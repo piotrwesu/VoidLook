@@ -1,6 +1,8 @@
 set(VoidLook_SRC_FILES main.c
-                        include/apikey.c)
-set(VoidLook_HEADER_FILES include/apikey.h)
+                        include/apikey.c
+                        include/https_client.c)
+set(VoidLook_HEADER_FILES include/apikey.h
+                            include/https_client.h)
 
 add_executable(${PROJECTNAME} ${VoidLook_SRC_FILES})
 
