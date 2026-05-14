@@ -1,5 +1,6 @@
 #include "https_client.h"
 #include <stdio.h>
+#include "sjson.h"
 
 int main(void)
 {
@@ -19,6 +20,14 @@ int main(void)
     }
 
     printf("%s\n", json);
+
+    SjsonNode *root = Sjson_parse(&json);
+    if(root == nullptr){
+        puts("Parsing error.\n");
+        goto cleanup;
+    }
+
+    Sjson_free_root(root);    
 
 cleanup:
     https_cleanup(client);
