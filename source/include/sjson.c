@@ -215,3 +215,40 @@ SjsonNode* Sjson_parse(char **text)
 
     return node;
 };
+
+SjsonNode* Sjson_get_index_array(SjsonNode *node, size_t index)
+{
+    if(node == nullptr || node->type != JSON_ARRAY) 
+        return nullptr;
+    if(index > node->value.array.count)
+        return nullptr;
+
+    return node->value.array.elements[index];
+};
+
+SjsonNode* Sjson_get_value(SjsonNode *node, const char *key)
+{
+    if(node == nullptr || node->type != JSON_OBJECT)
+        return nullptr;
+
+    for(size_t i = 0; i < node->value.object.count; i++)
+        if(strcmp(key, node->value.object.pairs[i].key) == 0)
+            return node->value.object.pairs[i].value; 
+
+    return nullptr;
+};
+
+bool Sjson_get_bool_value(SjsonNode *node)
+{
+    return node->value.boolean;
+};
+
+char* Sjson_get_string_value(SjsonNode *node)
+{
+    return node->value.string;
+};
+
+double Sjson_get_number_value(SjsonNode *node)
+{
+    return node->value.number;
+};

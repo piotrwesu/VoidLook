@@ -14,5 +14,10 @@ typedef enum {
 typedef struct SjsonNode SjsonNode;
 typedef struct SjsonPair SjsonPair;
 
-void Sjson_free_root(SjsonNode *root);
 SjsonNode* Sjson_parse(char **text); //remember use Sjson_free_root after Sjson_parse
+void Sjson_free_root(SjsonNode *root);
+SjsonNode* Sjson_get_index_array(SjsonNode *node, size_t index);
+SjsonNode* Sjson_get_value(SjsonNode *node, const char *key);
+bool Sjson_get_bool_value(SjsonNode *node);
+char* Sjson_get_string_value(SjsonNode *node);
+double Sjson_get_number_value(SjsonNode *node);
