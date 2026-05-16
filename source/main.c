@@ -31,11 +31,17 @@ int main(void)
     if(node == nullptr)
         node = root;
 
-    SjsonNode *url_photo = Sjson_get_value(node, "url");
-    printf("Url: %s\n", Sjson_get_string_value(url_photo));
+    SjsonNode *photo_node = Sjson_get_value(node, "url");
+    const char *url_photo = Sjson_get_string_value(photo_node);
+    printf("Url: %s\n", url_photo);
     
-    node = Sjson_get_value(node, "explanation");
-    printf("Explanation: %s", Sjson_get_string_value(node));
+    SjsonNode *explanation_node = Sjson_get_value(node, "explanation");
+    const char *explanation = Sjson_get_string_value(explanation_node);
+    printf("Explanation: %s", explanation);
+
+    bool ret = https_download_file(client, url_photo, "/tmp/apod.jpg");
+    if(!ret)
+        printf("Can't download image.");
 
     Sjson_free_root(root);    
 

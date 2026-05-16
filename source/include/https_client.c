@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <errno.h>
 
 #include <curl/curl.h>
 #include "apikey.h"
@@ -96,6 +97,35 @@ char* https_get_nasa_apod(HttpsClient *client)
     return client->chunk_data.data;
 };
 
+
+bool https_download_file(HttpsClient *client, const char *url, const char *filename)
+{
+    if(client == nullptr || client->curl_handle == nullptr || url == nullptr || filename == nullptr) 
+        return false;
+
+    FILE *file = fopen(filename, "wb");
+    if(file == NULL) {
+        fprintf(stderr,"Can't open file to read %s %s \n", filename, strerror(errno));
+
+        return false;
+    }
+
+    //CURLOPT_URL is sets for download url
+    curl_easy_setopt(client->curl_handle, CURLOPT_URL, url);
+    
+    //set callback to fwrite()
+    curl_easy_setopt(client->curl_handle, CURLOPT_WRITEFUNCTION, fwrite);
+
+    //user point to write data
+    curl_easy_setopt(client->curl_handle, CURLOPT_WRITEDATA, file);
+
+    //download file
+    CURLcode res = curl_easy_perform(client->curl_handle);
+
+    fclose(file);
+
+    return res == CURLE_OK;
+};
 
 static size_t write_memory_callback(void *contents, size_t size, size_t nmemb, void *userptr)
 {
