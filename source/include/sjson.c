@@ -54,6 +54,11 @@ static char* read_string(char **position)
 
     ptrdiff_t length = *position - start_position;
     char *dst = malloc((int)length + 1);
+    if(dst == nullptr) {
+        fprintf(stderr, "Can't allocate memory for string");
+        return nullptr;
+    }
+
     strncpy(dst, start_position, (size_t)length);
     dst[length] = '\0';
 
@@ -75,8 +80,12 @@ static long read_number(char **position)
     ptrdiff_t length = *position - start_position;
 
     char *string_number = malloc((int)length);
+    if(string_number == nullptr) {
+        fprintf(stderr, "Can't allocate memory for number");
+        return 0;
+    }
     strncpy(string_number, start_position, (size_t)length);
-    string_number[length] = '\0';
+    string_number[length - 1] = '\0';
    
     long number = atol(string_number); 
     free(string_number);
