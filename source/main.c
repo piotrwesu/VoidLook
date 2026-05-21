@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "sjson.h"
+#include "image.h"
 
 int main(void)
 {
@@ -63,6 +64,9 @@ int main(void)
         error_code = 1;
         goto cleanup;
     }
+
+    if(image_display_image_in_sizel(image_file_path) < 0)
+        error_code = 1;
 
 cleanup:
     free(image_file_path);
