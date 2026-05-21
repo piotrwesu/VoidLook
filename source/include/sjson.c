@@ -32,7 +32,7 @@ struct SjsonPair{
 };
 
 static char* read_string(char **position);
-static long read_number(char **position);
+static long read_number(char **position, bool *result);
 static void free_json(SjsonNode *nood);
 static void skip_spaces(char **c);
 
@@ -69,7 +69,7 @@ static char* read_string(char **position)
     return dst;
 };
 
-static long read_number(char **position)
+static long read_number(char **position, bool *result)
 {
     skip_spaces(position);
     char *start_position = *position;
@@ -82,6 +82,8 @@ static long read_number(char **position)
     char *string_number = malloc((int)length);
     if(string_number == nullptr) {
         fprintf(stderr, "Can't allocate memory for number");
+        *result = false;
+
         return 0;
     }
     strncpy(string_number, start_position, (size_t)length);
@@ -92,6 +94,8 @@ static long read_number(char **position)
     
     while(**position == ':' && **position == ',')
         (*position)++; //skip ':' or ','
+
+    *result = true;
 
     return number;
 };
@@ -198,7 +202,13 @@ SjsonNode* Sjson_parse(char **text)
     }
     else if(**c == '-' || isdigit(**c)) {
         node->type = JSON_NUMBER;
-        node->value.number = read_number(c);
+        bool res = false;
+        node->value.number = read_number(c, &res);
+        if(res == false) {
+            printf("Parsing error in read_number()");
+            free(node);
+            return nullptr;
+        }
     }
     else if(**c == 't' || **c == 'f') {
         node->type = JSON_BOOL;
