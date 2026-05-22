@@ -10,7 +10,17 @@ set(CMAKE_C_EXTENSIONS ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 find_package(CURL REQUIRED)
+find_package(PkgConfig QUIET)
+
+pkg_check_modules(LIBSIXEL REQUIRED IMPORTED_TARGET libsixel)
+
+if(NOT LIBSIXEL_FOUND)
+    message(FATAL_ERROR
+        "Can't find libsixel, need to install it.")
+endif()
+
 
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/.env" DESTINATION "${CMAKE_BINARY_DIR}/source")
 
+add_subdirectory(external)
 add_subdirectory(source)
