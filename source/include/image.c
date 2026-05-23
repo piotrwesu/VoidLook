@@ -107,6 +107,7 @@ int image_display_image_in_sizel(const char *image_name)
     status = sixel_encoder_encode(encoder, image_name);
     if(SIXEL_FAILED(status))
         fprintf(stderr, "sixel encoder encode failed\n");
+    printf("\n");
 
 cleanup:
 

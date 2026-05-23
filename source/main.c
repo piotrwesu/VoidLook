@@ -43,20 +43,16 @@ int main(void)
     printf("Explanation: %s\n", explanation);
     
     char *image_name = strrchr(url_photo, '/') + 1;
-    size_t image_name_size = strlen(image_name);
     const char temp_path[] = "/tmp/";
-    const int temp_path_size = strlen(temp_path);
 
-    char *image_file_path = malloc(temp_path_size + image_name_size + 1);
+    char *image_file_path = malloc(strlen(temp_path) + strlen(image_name) + 1);
     if(image_file_path == nullptr) {
         fprintf(stderr, "Can't allocate memory for image_file_path");
         error_code = 1;
         goto cleanup;
     }
 
-    memcpy(image_file_path , temp_path, temp_path_size);
-    memcpy(image_file_path + temp_path_size, image_name, image_name_size);
-    image_file_path[temp_path_size + image_name_size] = '\0';
+    snprintf(image_file_path, strlen(temp_path)+ strlen(image_name), "%s%s", temp_path, image_name);
 
     bool download_ret = https_download_file(client, url_photo, image_file_path);
     if(!download_ret) {
