@@ -42,6 +42,18 @@ int main(void)
     const char *explanation = Sjson_get_string_value(explanation_node);
     printf("Explanation: %s\n", explanation);
     
+    char *file_extension = strrchr(url_photo, '.') + 1;
+    if(file_extension == NULL) {
+        printf("Today Apod isn't photo.\n");
+        goto clean_extension;
+    }
+    
+    if(strncmp(file_extension, "jpg", 3))
+    {
+        printf("Today Apod isn't photo.\n");
+        goto clean_extension;
+    }
+
     char *image_name = strrchr(url_photo, '/') + 1;
     const char temp_path[] = "/tmp/";
 
@@ -68,6 +80,7 @@ int main(void)
 cleanup:
     free(image_file_path);
 
+clean_extension:
     Sjson_free_root(root);    
 
 clean_client:
