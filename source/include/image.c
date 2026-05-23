@@ -3,7 +3,6 @@
 #define STBI_IMAGE_IMPLEMENTATION
 
 #include <stb/stb_image.h>
-#include <b64/cencode.h>
 #include <sixel/sixel.h>
 #include <string.h>
 
