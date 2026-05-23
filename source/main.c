@@ -45,14 +45,15 @@ int main(void)
     char *image_name = strrchr(url_photo, '/') + 1;
     const char temp_path[] = "/tmp/";
 
-    char *image_file_path = malloc(strlen(temp_path) + strlen(image_name) + 1);
+    size_t image_file_path_size = strlen(temp_path) + strlen(image_name) + 1;
+    char *image_file_path = malloc(image_file_path_size);
     if(image_file_path == nullptr) {
         fprintf(stderr, "Can't allocate memory for image_file_path");
         error_code = 1;
         goto cleanup;
     }
 
-    snprintf(image_file_path, strlen(temp_path)+ strlen(image_name), "%s%s", temp_path, image_name);
+    snprintf(image_file_path, image_file_path_size, "%s%s", temp_path, image_name);
 
     bool download_ret = https_download_file(client, url_photo, image_file_path);
     if(!download_ret) {
