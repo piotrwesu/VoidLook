@@ -8,8 +8,8 @@ add_executable(${PROJECTNAME} ${VoidLook_SRC_FILES})
 
 target_link_libraries(${PROJECTNAME} PRIVATE CURL::libcurl
                                                 stb
-                                                b64
                                                 sixel)
+
 target_include_directories(${PROJECTNAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 set_property(TARGET ${PROJECTNAME} PROPERTY OUTPUT_NAME "voidlook")
