@@ -55,7 +55,9 @@ int main(void)
     }
 
     char *image_name = strrchr(url_photo, '/') + 1;
-    const char temp_path[] = "/tmp/";
+    const char *temp_path = getenv("TMPDIR");
+    if(temp_path == NULL)
+        temp_path = "/tmp/";
 
     size_t image_file_path_size = strlen(temp_path) + strlen(image_name) + 1;
     char *image_file_path = malloc(image_file_path_size);
