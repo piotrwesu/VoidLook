@@ -5,6 +5,8 @@
 #include "sjson.h"
 #include "image.h"
 
+char* download_file_from_serv(HttpsClient *client, const char *url_photo);
+
 int main(void)
 {
     int error_code = 0;
@@ -42,16 +44,38 @@ int main(void)
     const char *explanation = Sjson_get_string_value(explanation_node);
     printf("Explanation: %s\n", explanation);
     
+    char* image_file_path = download_file_from_serv(client, url_photo);
+    if(image_file_path == nullptr) {
+        error_code = 1;
+        goto clean_extension;
+    }
+       
+    if(image_display_image_in_sixel(image_file_path) < 0)
+        error_code = 1;
+
+    free(image_file_path);
+
+clean_extension:
+    Sjson_free_root(root);    
+
+clean_client:
+    https_cleanup(client);
+
+    return error_code;
+}
+
+char* download_file_from_serv(HttpsClient *client, const char *url_photo)
+{
     char *file_extension = strrchr(url_photo, '.') + 1;
     if(file_extension == NULL) {
         printf("Today Apod isn't photo.\n");
-        goto clean_extension;
+        return nullptr;
     }
     
     if(strncmp(file_extension, "jpg", 3))
     {
         printf("Today Apod isn't photo.\n");
-        goto clean_extension;
+        return nullptr;
     }
 
     char *image_name = strrchr(url_photo, '/') + 1;
@@ -63,8 +87,7 @@ int main(void)
     char *image_file_path = malloc(image_file_path_size);
     if(image_file_path == nullptr) {
         fprintf(stderr, "Can't allocate memory for image_file_path");
-        error_code = 1;
-        goto cleanup;
+        return nullptr;
     }
 
     snprintf(image_file_path, image_file_path_size, "%s%s", temp_path, image_name);
@@ -72,21 +95,10 @@ int main(void)
     bool download_ret = https_download_file(client, url_photo, image_file_path);
     if(!download_ret) {
         printf("Can't download image.");
-        error_code = 1;
-        goto cleanup;
+        free(image_file_path);
+
+        return nullptr;
     }
-
-    if(image_display_image_in_sixel(image_file_path) < 0)
-        error_code = 1;
-
-cleanup:
-    free(image_file_path);
-
-clean_extension:
-    Sjson_free_root(root);    
-
-clean_client:
-    https_cleanup(client);
-
-    return error_code;
-}
+ 
+    return image_file_path;
+};
