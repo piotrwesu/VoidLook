@@ -6,7 +6,7 @@
 #include <sixel/sixel.h>
 #include <string.h>
 
-int image_display_image_in_sizel(const char *image_name)
+int image_display_image_in_sixel(const char *image_name)
 {
     int width, height, channels_infile;
     const int desired_channels = 3;

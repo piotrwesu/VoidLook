@@ -76,7 +76,7 @@ int main(void)
         goto cleanup;
     }
 
-    if(image_display_image_in_sizel(image_file_path) < 0)
+    if(image_display_image_in_sixel(image_file_path) < 0)
         error_code = 1;
 
 cleanup:
