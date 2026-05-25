@@ -19,8 +19,12 @@ if(NOT LIBSIXEL_FOUND)
         "Can't find libsixel, need to install it.")
 endif()
 
-
-file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/.env" DESTINATION "${CMAKE_BINARY_DIR}/source")
+if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/.env)
+    file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/.env.example" DESTINATION "${CMAKE_BINARY_DIR}/source")
+    file(RENAME "${CMAKE_BINARY_DIR}/.env.example" "${CMAKE_BINARY_DIR}/source/.env")
+else()
+    file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/.env" DESTINATION "${CMAKE_BINARY_DIR}/source")
+endif()
 
 add_subdirectory(external)
 add_subdirectory(source)
