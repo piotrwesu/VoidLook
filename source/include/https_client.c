@@ -127,6 +127,45 @@ bool https_download_file(HttpsClient *client, const char *url, const char *filen
     return res == CURLE_OK;
 };
 
+char* https_download_image(HttpsClient *client, const char *url_photo)
+{
+    char *file_extension = strrchr(url_photo, '.') + 1;
+    if(file_extension == NULL) {
+        printf("Today Apod isn't photo.\n");
+        return nullptr;
+    }
+    
+    if(strncmp(file_extension, "jpg", 3))
+    {
+        printf("Today Apod isn't photo.\n");
+        return nullptr;
+    }
+
+    char *image_name = strrchr(url_photo, '/') + 1;
+    const char *temp_path = getenv("TMPDIR");
+    if(temp_path == NULL)
+        temp_path = "/tmp/";
+
+    size_t image_file_path_size = strlen(temp_path) + strlen(image_name) + 1;
+    char *image_file_path = malloc(image_file_path_size);
+    if(image_file_path == nullptr) {
+        fprintf(stderr, "Can't allocate memory for image_file_path");
+        return nullptr;
+    }
+
+    snprintf(image_file_path, image_file_path_size, "%s%s", temp_path, image_name);
+
+    bool download_ret = https_download_file(client, url_photo, image_file_path);
+    if(!download_ret) {
+        printf("Can't download image.");
+        free(image_file_path);
+
+        return nullptr;
+    }
+ 
+    return image_file_path;
+};
+
 static size_t write_memory_callback(void *contents, size_t size, size_t nmemb, void *userptr)
 {
     size_t real_size = size * nmemb;

@@ -1,11 +1,8 @@
 #include "https_client.h"
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
 #include "sjson.h"
 #include "image.h"
-
-char* download_file_from_serv(HttpsClient *client, const char *url_photo);
 
 int main(void)
 {
@@ -23,8 +20,6 @@ int main(void)
         error_code = 1;
         goto clean_client;
     }
-
-    //printf("%s\n", json);
 
     SjsonNode *root = Sjson_parse(&json);
     if(root == nullptr){
@@ -44,7 +39,7 @@ int main(void)
     const char *explanation = Sjson_get_string_value(explanation_node);
     printf("Explanation: %s\n", explanation);
     
-    char* image_file_path = download_file_from_serv(client, url_photo);
+    char* image_file_path = https_download_image(client, url_photo);
     if(image_file_path == nullptr) {
         error_code = 1;
         goto clean_extension;
@@ -63,42 +58,3 @@ clean_client:
 
     return error_code;
 }
-
-char* download_file_from_serv(HttpsClient *client, const char *url_photo)
-{
-    char *file_extension = strrchr(url_photo, '.') + 1;
-    if(file_extension == NULL) {
-        printf("Today Apod isn't photo.\n");
-        return nullptr;
-    }
-    
-    if(strncmp(file_extension, "jpg", 3))
-    {
-        printf("Today Apod isn't photo.\n");
-        return nullptr;
-    }
-
-    char *image_name = strrchr(url_photo, '/') + 1;
-    const char *temp_path = getenv("TMPDIR");
-    if(temp_path == NULL)
-        temp_path = "/tmp/";
-
-    size_t image_file_path_size = strlen(temp_path) + strlen(image_name) + 1;
-    char *image_file_path = malloc(image_file_path_size);
-    if(image_file_path == nullptr) {
-        fprintf(stderr, "Can't allocate memory for image_file_path");
-        return nullptr;
-    }
-
-    snprintf(image_file_path, image_file_path_size, "%s%s", temp_path, image_name);
-
-    bool download_ret = https_download_file(client, url_photo, image_file_path);
-    if(!download_ret) {
-        printf("Can't download image.");
-        free(image_file_path);
-
-        return nullptr;
-    }
- 
-    return image_file_path;
-};
