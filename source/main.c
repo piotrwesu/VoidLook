@@ -1,11 +1,22 @@
 #include "https_client.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
 #include "sjson.h"
 #include "image.h"
 
-int main(void)
+int main(int argc, char **argv)
 {
+    for(int i = 1; i < argc; i++) {
+        if ((strcmp(argv[i], "--version") == 0) || (strcmp(argv[i], "-v") == 0)) {
+            printf("VoidLook version 0.0.9\n");
+            printf("https://github.com/piotrwesu/VoidLook\n");
+
+            return 0;
+        }
+    }
+
     int error_code = 0;
 
     HttpsClient *client = https_init();
