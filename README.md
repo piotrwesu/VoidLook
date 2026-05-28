@@ -5,6 +5,7 @@ VoidLook is a lightweight terminal-focused image viewer designed for viewing of 
 It aims to provide a minimal, fast way to preview images without leaving the terminal environment.
 
 ## Example
+<img width="1372" height="976" alt="voidlook" src="https://github.com/user-attachments/assets/1bd066f6-1e62-4281-8652-be6ea740d906" />
 
 ## Api Key
 The ".env.example" file contains a universal key.
