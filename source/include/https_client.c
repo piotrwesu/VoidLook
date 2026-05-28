@@ -85,7 +85,9 @@ char* https_get_nasa_apod(HttpsClient *client)
     nasa_address_with_key = nullptr;
     api_key = nullptr;
 
+    printf("\x1b[90m");
     printf("Connecting with NASA servers...\n");
+    printf("\x1b[0m\n");
 
     CURLcode res;
     res = curl_easy_perform(client->curl_handle);

@@ -5,6 +5,7 @@
 
 #include "sjson.h"
 #include "image.h"
+#include "cli.h"
 
 int main(int argc, char **argv)
 {
@@ -16,6 +17,8 @@ int main(int argc, char **argv)
             return 0;
         }
     }
+
+    printf("\nVoidLook - Astronomy Picture Of The Day\n\n");
 
     int error_code = 0;
 
@@ -44,12 +47,18 @@ int main(int argc, char **argv)
 
     SjsonNode *photo_node = Sjson_get_value(node, "url");
     const char *url_photo = Sjson_get_string_value(photo_node);
-    printf("Url: %s\n", url_photo);
+
+    SjsonNode *hd_photo_node = Sjson_get_value(node, "hdurl");
+    const char *url_hd_photo = Sjson_get_string_value(hd_photo_node);
+
+    SjsonNode *title_node = Sjson_get_value(node, "title");
+    const char *title = Sjson_get_string_value(title_node);
     
     SjsonNode *explanation_node = Sjson_get_value(node, "explanation");
     const char *explanation = Sjson_get_string_value(explanation_node);
-    printf("Explanation: %s\n", explanation);
     
+    cli_print_apod(url_hd_photo, title, explanation);
+
     char* image_file_path = https_download_image(client, url_photo);
     if(image_file_path == nullptr) {
         error_code = 1;
