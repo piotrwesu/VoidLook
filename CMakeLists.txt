@@ -21,7 +21,7 @@ endif()
 
 if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/.env)
     file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/.env.example" DESTINATION "${CMAKE_BINARY_DIR}/source")
-    file(RENAME "${CMAKE_BINARY_DIR}/.env.example" "${CMAKE_BINARY_DIR}/source/.env")
+    file(RENAME "${CMAKE_BINARY_DIR}/source/.env.example" "${CMAKE_BINARY_DIR}/source/.env")
 else()
     file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/.env" DESTINATION "${CMAKE_BINARY_DIR}/source")
 endif()
