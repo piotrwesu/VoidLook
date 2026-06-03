@@ -189,7 +189,12 @@ SjsonNode* Sjson_parse(char **text)
             node->value.object.pairs = pair;
 
             node->value.object.pairs[i] = (SjsonPair){};
-            node->value.object.pairs[i].key = read_string(c); 
+            char *text = read_string(c);
+            if(text == nullptr) {
+                free(node);
+                return nullptr;
+            }
+            else node->value.object.pairs[i].key = text; 
             node->value.object.pairs[i].value = Sjson_parse(c);
             i++;
         }
@@ -198,7 +203,11 @@ SjsonNode* Sjson_parse(char **text)
 
     }else if(**c == '\"' || isalpha(**c)) {
         node->type = JSON_STRING;
-        node->value.string = read_string(c);
+        char *text = read_string(c);
+        if(text == nullptr) {
+            free(node);
+            return nullptr;
+        }else node->value.string = text;
     }
     else if(**c == '-' || isdigit(**c)) {
         node->type = JSON_NUMBER;
