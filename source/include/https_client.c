@@ -74,11 +74,14 @@ char* https_get_nasa_apod(HttpsClient *client)
 
     client->chunk_data.data= malloc(1);
     client->chunk_data.size = 0;
+    char error_buffer[CURL_ERROR_SIZE];
+    error_buffer[0] = 0;
 
     curl_easy_setopt(client->curl_handle, CURLOPT_URL, nasa_address_with_key);
     curl_easy_setopt(client->curl_handle, CURLOPT_WRITEFUNCTION, write_memory_callback);
     curl_easy_setopt(client->curl_handle, CURLOPT_WRITEDATA, (void*)&client->chunk_data);
     curl_easy_setopt(client->curl_handle, CURLOPT_USERAGENT, "libcurl-agent/1.0");
+    curl_easy_setopt(client->curl_handle, CURLOPT_ERRORBUFFER, error_buffer);
 
     free(nasa_address_with_key);
     free(api_key);
@@ -93,6 +96,8 @@ char* https_get_nasa_apod(HttpsClient *client)
     res = curl_easy_perform(client->curl_handle);
     if(res != CURLE_OK) {
         fprintf(stderr, "Download error: %s\n", curl_easy_strerror(res));
+        if(strlen(error_buffer))
+            printf("Error connection: %s", error_buffer);
         return nullptr;
     }    
 
