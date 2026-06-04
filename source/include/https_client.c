@@ -142,7 +142,7 @@ char* https_download_image(HttpsClient *client, const char *url_photo)
         return nullptr;
     }
     
-    if(strncmp(file_extension, "jpg", 3))
+    if(strncmp(file_extension, "jpg", 3) && strncmp(file_extension, "png", 3))
     {
         printf("Today Apod isn't photo.\n");
         return nullptr;
