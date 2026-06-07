@@ -37,7 +37,8 @@ int main(int argc, char **argv)
 
     SjsonNode *root = Sjson_parse(&json);
     if(root == nullptr){
-        puts("Parsing error.\n");
+        puts("Parse error due to broken connection.\n");
+        error_code = 1;
         goto clean_client;
     }
 

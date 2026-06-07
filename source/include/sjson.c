@@ -46,6 +46,8 @@ static char* read_string(char **position)
 
     while(**position != '\0') {
         *position = strchr(*position, '\"');
+        if(*position == nullptr)
+            return nullptr;
 
         if(*(*position - 1) != '\\')
             break;
@@ -168,6 +170,9 @@ SjsonNode* Sjson_parse(char **text)
         size_t i = 0;
         while(**c != ']') {
             node->value.array.elements[i] = Sjson_parse(c);
+            if(node->value.array.elements[i] == nullptr)
+                return nullptr;
+
             i++;
         }
         node->value.array.count = i;
@@ -196,6 +201,9 @@ SjsonNode* Sjson_parse(char **text)
             }
             else node->value.object.pairs[i].key = text; 
             node->value.object.pairs[i].value = Sjson_parse(c);
+            if(node->value.object.pairs[i].value == nullptr)
+                return nullptr;
+
             i++;
         }
 
