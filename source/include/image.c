@@ -1,8 +1,8 @@
 #include "image.h"
 
-#define STBI_IMAGE_IMPLEMENTATION
+#define STB_IMAGE_IMPLEMENTATION
 
-#include <stb/stb_image.h>
+#include "stb_image.h"
 #include <sixel/sixel.h>
 #include <string.h>
 

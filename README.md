@@ -46,7 +46,7 @@ All:
     git clone https://github.com/piotrwesu/VoidLook.git
     cd VoidLook
     mkdir build;cd build
-    cmake -S .. -B . - G "Ninja"
+    cmake -S .. -B .
 
 
 ## Usage
