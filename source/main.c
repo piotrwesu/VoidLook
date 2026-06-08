@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "sjson.h"
 #include "image.h"
@@ -27,17 +28,27 @@ int main(int argc, char **argv)
         puts("Can't init HttpsClient.");
         return 1;
     }
-    
-    char *json = https_get_nasa_apod(client);
-    if(json == nullptr) {
-        puts("Can't get json file from NASA APOD.");
-        error_code = 1;
-        goto clean_client;
+
+    SjsonNode *root = nullptr;
+    const int max_connection_attempts = 3;
+
+    for(int i = 0; i < max_connection_attempts; i++) {
+        char *json = https_get_nasa_apod(client);
+        if(json == nullptr){
+            usleep(50);
+            continue;
+        }
+
+        root = Sjson_parse(&json);
+        if(root == nullptr) {
+            usleep(50);
+            continue;
+        }
+        else break;
     }
 
-    SjsonNode *root = Sjson_parse(&json);
-    if(root == nullptr){
-        puts("Parse error due to broken connection.\n");
+    if(root == nullptr) {
+        puts("Can't get json file from NASA APOD.");
         error_code = 1;
         goto clean_client;
     }
