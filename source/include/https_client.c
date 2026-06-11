@@ -151,6 +151,8 @@ char* https_download_image(HttpsClient *client, const char *url_photo)
     char *image_name = strrchr(url_photo, '/') + 1;
     const char *temp_path = getenv("TMPDIR");
     if(temp_path == NULL)
+        temp_path = getenv("TEMP");
+    if(temp_path == NULL)
         temp_path = "/tmp/";
 
     size_t image_file_path_size = strlen(temp_path) + strlen(image_name) + 1;
