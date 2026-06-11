@@ -34,14 +34,20 @@ int main(int argc, char **argv)
 
     for(int i = 0; i < max_connection_attempts; i++) {
         char *json = https_get_nasa_apod(client);
+
         if(json == nullptr){
             usleep(50);
+
             continue;
         }
 
         root = Sjson_parse(&json);
         if(root == nullptr) {
             usleep(50);
+
+            if(json)
+                free(json);
+
             continue;
         }
         else break;

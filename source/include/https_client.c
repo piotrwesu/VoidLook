@@ -72,7 +72,7 @@ char* https_get_nasa_apod(HttpsClient *client)
     strcat(nasa_address_with_key, nasa_address);
     strcat(nasa_address_with_key, api_key);
 
-    client->chunk_data.data= malloc(1);
+    client->chunk_data.data = realloc(client->chunk_data.data, 1);
     client->chunk_data.size = 0;
     char error_buffer[CURL_ERROR_SIZE];
     error_buffer[0] = 0;
@@ -96,8 +96,15 @@ char* https_get_nasa_apod(HttpsClient *client)
     res = curl_easy_perform(client->curl_handle);
     if(res != CURLE_OK) {
         fprintf(stderr, "Download error: %s\n", curl_easy_strerror(res));
+
         if(strlen(error_buffer))
             printf("Error connection: %s", error_buffer);
+        
+        if(client->chunk_data.data) {
+            free(client->chunk_data.data);
+            client->chunk_data.size = 0;
+        }
+
         return nullptr;
     }    
 
