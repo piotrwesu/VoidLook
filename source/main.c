@@ -12,7 +12,7 @@ int main(int argc, char **argv)
 {
     for(int i = 1; i < argc; i++) {
         if ((strcmp(argv[i], "--version") == 0) || (strcmp(argv[i], "-v") == 0)) {
-            printf("VoidLook version 1.0.0\n");
+            printf("VoidLook version 1.1.0\n");
             printf("https://github.com/piotrwesu/VoidLook\n");
 
             return 0;

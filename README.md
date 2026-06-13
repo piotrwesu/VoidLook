@@ -41,6 +41,7 @@ sudo pacman -S cmake pkg-config curl libsixel
 ```bash
 sudo dnf install cmake pkg-config libcurl-devel libsixel-devel
 ```
+
 All:
 
     git clone https://github.com/piotrwesu/VoidLook.git
@@ -48,6 +49,10 @@ All:
     mkdir build;cd build
     cmake -S .. -B .
 
+#### Troubleshooting compilation
+Different Linux distributions and package managers may store `libsixel` or `curl` headers in different locations (e.g., `/usr/include/sixel.h` vs `/usr/local/include/sixel/sixel.h`). 
+
+If the build system fails to locate the `sixel.h` file, you can manually specify the path in source files.
 
 ## Usage
 
@@ -63,5 +68,3 @@ Showing version of program.
 ## Limitation
 An app that only displays photos, sometimes Apod is a movie.
 
-## Known Issues
-Fix Unicode Escape Sequences
