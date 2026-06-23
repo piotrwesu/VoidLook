@@ -64,18 +64,24 @@ int main(int argc, char **argv)
         node = root;
 
     SjsonNode *photo_node = Sjson_get_value(node, "url");
-    const char *url_photo = Sjson_get_string_value(photo_node);
+    const char *url_photo = nullptr;
+    if(photo_node)
+        url_photo = Sjson_get_string_value(photo_node);
 
     SjsonNode *hd_photo_node = Sjson_get_value(node, "hdurl");
     const char *url_hd_photo = nullptr; 
-    if(hd_photo_node != nullptr)
+    if(hd_photo_node)
         url_hd_photo = Sjson_get_string_value(hd_photo_node);
 
     SjsonNode *title_node = Sjson_get_value(node, "title");
-    const char *title = Sjson_get_string_value(title_node);
+    const char *title = nullptr;
+    if(title_node)
+        title = Sjson_get_string_value(title_node);
     
     SjsonNode *explanation_node = Sjson_get_value(node, "explanation");
-    const char *explanation = Sjson_get_string_value(explanation_node);
+    const char *explanation = nullptr;
+    if(explanation_node)
+        explanation = Sjson_get_string_value(explanation_node);
     
     cli_print_apod(url_hd_photo, title, explanation);
 
