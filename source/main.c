@@ -67,7 +67,9 @@ int main(int argc, char **argv)
     const char *url_photo = Sjson_get_string_value(photo_node);
 
     SjsonNode *hd_photo_node = Sjson_get_value(node, "hdurl");
-    const char *url_hd_photo = Sjson_get_string_value(hd_photo_node);
+    const char *url_hd_photo = nullptr; 
+    if(hd_photo_node != nullptr)
+        url_hd_photo = Sjson_get_string_value(hd_photo_node);
 
     SjsonNode *title_node = Sjson_get_value(node, "title");
     const char *title = Sjson_get_string_value(title_node);

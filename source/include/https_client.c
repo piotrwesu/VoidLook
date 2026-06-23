@@ -98,7 +98,7 @@ char* https_get_nasa_apod(HttpsClient *client)
         fprintf(stderr, "Download error: %s\n", curl_easy_strerror(res));
 
         if(strlen(error_buffer))
-            printf("Error connection: %s", error_buffer);
+            fprintf(stderr, "Error connection: %s", error_buffer);
         
         if(client->chunk_data.data) {
             free(client->chunk_data.data);
@@ -145,13 +145,14 @@ char* https_download_image(HttpsClient *client, const char *url_photo)
 {
     char *file_extension = strrchr(url_photo, '.') + 1;
     if(file_extension == NULL) {
-        printf("Today Apod isn't photo.\n");
+        printf("Today Apod isn't photo - Can't display it.\n");
         return nullptr;
     }
     
     if(strncmp(file_extension, "jpg", 3) && strncmp(file_extension, "png", 3))
     {
-        printf("Today Apod isn't photo.\n");
+        printf("Today Apod isn't photo - Can't display it.\n");
+        printf("Url photo: %s\n", url_photo);
         return nullptr;
     }
 
