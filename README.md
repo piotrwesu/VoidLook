@@ -68,3 +68,8 @@ Showing version of program.
 ## Limitation
 An app that only displays photos, sometimes Apod is a movie.
 
+## Changelog:
+1.1.1
+### Fix
+* fix parsing empty url_hd_photo
+* fix getting value for empty nodes
