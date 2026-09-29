@@ -81,7 +81,7 @@ static long read_number(char **position, bool *result)
 
     ptrdiff_t length = *position - start_position;
 
-    char *string_number = malloc((int)length);
+    char *string_number = malloc((int)length + 1);
     if(string_number == nullptr) {
         fprintf(stderr, "Can't allocate memory for number");
         *result = false;
@@ -89,12 +89,12 @@ static long read_number(char **position, bool *result)
         return 0;
     }
     strncpy(string_number, start_position, (size_t)length);
-    string_number[length - 1] = '\0';
+    string_number[length] = '\0';
    
     long number = atol(string_number); 
     free(string_number);
     
-    while(**position == ':' && **position == ',')
+    while(**position == ':' || **position == ',')
         (*position)++; //skip ':' or ','
 
     *result = true;
