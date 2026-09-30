@@ -168,7 +168,16 @@ SjsonNode* Sjson_parse(char **text)
         node->type = JSON_ARRAY;
 
         size_t i = 0;
+        node->value.array.elements = nullptr;
+
         while(**c != ']') {
+            SjsonNode **new_node = realloc(node->value.array.elements, (i + 1) * sizeof(SjsonNode));
+            if(new_node == nullptr) {
+                fprintf(stderr, "Can't realloc memory for SjsonNode");
+                return nullptr;
+            }
+            node->value.array.elements = new_node;
+
             node->value.array.elements[i] = Sjson_parse(c);
             if(node->value.array.elements[i] == nullptr)
                 return nullptr;
@@ -206,6 +215,10 @@ SjsonNode* Sjson_parse(char **text)
 
             i++;
         }
+
+        (*c)++; //we miss '}'
+        if(**c == ',')
+            (*c)++;
 
         node->value.object.count = i;
 
