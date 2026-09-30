@@ -17,6 +17,9 @@ void cli_print_apod(const char *url_photo, const char *title, const char *explan
 
     const int terminal_width = 79;
 
+    if(explanation == nullptr)
+        return;
+
     if(strlen(explanation) <= terminal_width) {
         if(explanation) {
             printf("\x1b[90m");
@@ -38,13 +41,13 @@ static void print_line_width(const char *text, const int terminal_width)
     int text_length = strlen(text);
 
     while(start + terminal_width < text_length) {
-        while(*(text+ start) == ' ') // we miss empty space on start line
+        while(start + terminal_width < text_length && *(text+ start) == ' ') // we miss empty space on start line
             start++;
 
         int end = start + terminal_width;
 
         if(*(text + end) != ' ') {
-            while(*(text + end) != ' ') // don't end line in half word
+            while(end > start && *(text + end) != ' ') // don't end line in half word
                 end--;                          // go back
         }
         end++;
