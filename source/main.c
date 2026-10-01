@@ -64,9 +64,9 @@ int main(int argc, char **argv)
         node = root;
 
     SjsonNode *photo_node = Sjson_get_value(node, "url");
-    const char *url_photo = nullptr;
+    const char *url = nullptr;
     if(photo_node)
-        url_photo = Sjson_get_string_value(photo_node);
+        url = Sjson_get_string_value(photo_node);
 
     SjsonNode *hd_photo_node = Sjson_get_value(node, "hdurl");
     const char *url_hd_photo = nullptr; 
@@ -78,14 +78,14 @@ int main(int argc, char **argv)
     if(title_node)
         title = Sjson_get_string_value(title_node);
     
-    SjsonNode *explanation_node = Sjson_get_value(node, "explanation");
-    const char *explanation = nullptr;
-    if(explanation_node)
-        explanation = Sjson_get_string_value(explanation_node);
+    SjsonNode *alt_node = Sjson_get_value(node, "alt");
+    const char *alt = nullptr;
+    if(alt_node)
+        alt = Sjson_get_string_value(alt_node);
     
-    cli_print_apod(url_hd_photo, title, explanation);
+    cli_print_apod(url, title, alt);
 
-    char* image_file_path = https_download_image(client, url_photo);
+    char* image_file_path = https_download_image(client, url_hd_photo);
     if(image_file_path == nullptr) {
         error_code = 1;
         goto clean_extension;

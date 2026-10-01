@@ -62,7 +62,7 @@ char* https_get_nasa_apod(HttpsClient *client)
         return nullptr;
     }
 
-    const char *nasa_address = "https://api.nasa.gov/planetary/apod?api_key=";
+    const char *nasa_address = "https://science.nasa.gov/wp-json/wp/v2/apod-basic?api_key=";
     int address_size = strlen(nasa_address) + strlen(api_key) + 1;
     char *nasa_address_with_key = calloc(1, address_size);
     if(nasa_address_with_key == nullptr) {
