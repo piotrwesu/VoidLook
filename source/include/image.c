@@ -10,21 +10,13 @@
 #include <sys/ioctl.h>
 #include <string.h>
 
-static int get_terminal_width_pixels(int fallback_px) {
+static struct winsize get_terminal_width_pixels(struct winsize fallback_px) {
     struct winsize w;
 
-    // Próbujemy pobrać wymiary z wyjścia standardowego (STDOUT_FILENO = 1)
     if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &w) == 0) {
 
-        // 1. Jeśli terminal przekazuje bezpośrednią rozdzielczość w pikselach
-        if (w.ws_xpixel > 0) {
-            return w.ws_xpixel;
-        }
-
-        // 2. Jeśli podaje tylko kolumny, przeliczamy kolumny na piksele
-        //    (zakładając standardową szerokość fontu ~8-10px na znak)
-        if (w.ws_col > 0) {
-            return w.ws_col * 9;
+        if (w.ws_xpixel > 0 && w.ws_ypixel > 0) {
+            return (struct winsize){.ws_xpixel = w.ws_xpixel, .ws_ypixel = w.ws_ypixel};
         }
     }
 
@@ -42,19 +34,33 @@ int image_display_image_in_sixel(const char *image_name)
 
         return -1;
     }
-    int term_px_width = get_terminal_width_pixels(800);
-    int max_width = term_px_width - 40;
+    struct winsize term_px = get_terminal_width_pixels((struct winsize){.ws_xpixel = 800, .ws_ypixel = 800});
+    int max_width = term_px.ws_xpixel - 40;
+    int max_height = term_px.ws_ypixel;
+
     if(max_width < 1)
         max_width = 1;
+    if(max_height < 1)
+        max_height = 1;
 
     int new_width = width;
     int new_height = height;
 
-    if(width > max_width) {
-        new_width = max_width;
-        new_height = (int)((double)height * new_width / width);
-        if(new_height < 1)
-            new_height = 1;
+    if(width > 0 && max_width > 0) {
+        double scale_w = (double)max_width / width;
+        double scale_h = (double)max_height / height;
+
+        double scale = scale_w < scale_h ? scale_w : scale_h;
+
+        if(scale < 1) {
+            new_width = (int)(width * scale);
+            new_height = (int)(height * scale);
+        
+            if(new_width < 1)
+                new_width = 1;
+            if(new_height < 1)
+                new_height = 1;
+        }
     }
 
     unsigned char *resized_data = malloc((size_t)new_width * new_height * desired_channels);
