@@ -36,7 +36,7 @@ int image_display_image_in_sixel(const char *image_name)
     }
     struct winsize term_px = get_terminal_width_pixels((struct winsize){.ws_xpixel = 800, .ws_ypixel = 800});
     int max_width = term_px.ws_xpixel - 40;
-    int max_height = term_px.ws_ypixel;
+    int max_height = term_px.ws_ypixel - 180;
 
     if(max_width < 1)
         max_width = 1;
