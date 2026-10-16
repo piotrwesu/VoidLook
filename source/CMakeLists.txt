@@ -9,7 +9,7 @@ add_executable(${PROJECTNAME} ${VoidLook_SRC_FILES})
 
 target_link_libraries(${PROJECTNAME} PRIVATE CURL::libcurl
                                                 stb
-                                                sixel
+                                                PkgConfig::LIBSIXEL
                                                 m)
 
 target_include_directories(${PROJECTNAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include") 
