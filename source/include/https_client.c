@@ -143,8 +143,11 @@ bool https_download_file(HttpsClient *client, const char *url, const char *filen
 
 char* https_download_image(HttpsClient *client, const char *url_photo)
 {
-    char *file_extension = strrchr(url_photo, '.') + 1;
-    if(file_extension == NULL) {
+    char *file_extension = strrchr(url_photo, '.');
+    if(file_extension)
+        file_extension += 1;
+
+    if(file_extension == nullptr) {
         printf("Today Apod isn't photo - Can't display it.\n");
         return nullptr;
     }
@@ -163,7 +166,11 @@ char* https_download_image(HttpsClient *client, const char *url_photo)
     if(temp_path == NULL)
         temp_path = "/tmp/";
 
-    size_t image_file_path_size = strlen(temp_path) + strlen(image_name) + 1;
+    size_t extension_length = 2;
+    if(strncmp(file_extension, "jpeg", 4))
+        extension_length += 1;
+
+    size_t image_file_path_size = strlen(temp_path) + strlen(image_name) - strlen(file_extension) + extension_length + 1;
     char *image_file_path = malloc(image_file_path_size);
     if(image_file_path == nullptr) {
         fprintf(stderr, "Can't allocate memory for image_file_path");
